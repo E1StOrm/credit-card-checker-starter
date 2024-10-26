@@ -47,30 +47,40 @@ const findInvalidCards = cardNumbers => {
     return cardNumbers.filter(cardNumber => !validateCred(cardNumber));
 };
 
+const getCompanyByCardNumber = cardNumber => {
+    switch (cardNumber[0]) {
+        case 3:
+            return "Amex (American Express)";
+        case 4:
+            return "Visa";
+        case 5:
+            return "Mastercard";
+        case 6:
+            return "Discover";
+        default:
+            return "Company not found";
+    }
+};
+
 const idInvalidCardCompanies = cardNumbers => {
     const companies = {};
     findInvalidCards(cardNumbers).forEach(cardNumber => {
-        switch (cardNumber[0]) {
-            case 3:
-                companies["Amex (American Express)"]++;
-                break;
-            case 4:
-                companies["Visa"]++;
-                break;
-            case 5:
-                companies["Mastercard"]++;
-                break;
-            case 6:
-                companies["Discover"]++;
-                break;
-            default:
-                companies["Company not found"]++;
-                break
-        }
+        companies[getCompanyByCardNumber(cardNumber)]++;
     });
     return Object.keys(companies);
 };
 
+const generatedCardNumbers = ["4539053498892596", "373598923132528", "6011736100202202", "4716454406091718541"];
+
+const cardNumberStringToArray = cardNumberStrings => {
+    return cardNumberStrings.map(cardNumberString => cardNumberString.split("").map(chr => Number(chr)));
+};
+
+
+
 // console.log(validateCred(valid2));
 // console.log(findInvalidCards(batch));
-console.log(idInvalidCardCompanies(batch));
+// console.log(idInvalidCardCompanies(batch));
+for (let cardNumber of cardNumberStringToArray(generatedCardNumbers)) {
+    console.log(`${getCompanyByCardNumber(cardNumber)} card "${cardNumber.join('')}" is valid: ${(validateCred(cardNumber) ? "Yes" : "No")}`);
+}
